@@ -1,6 +1,6 @@
 <template>
   <div class="email-container">
-      邮箱登录
+      别急 还未开发 乖乖去手机登录
   </div>
 </template>
 

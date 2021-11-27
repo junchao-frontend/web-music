@@ -1,6 +1,6 @@
 <template>
   <div class="container">
-      发现
+      <van-button type="danger" @click="test">快快快登录</van-button>
   </div>
 </template>
 
@@ -14,7 +14,11 @@ export default {
   computed: {},
   created () {},
   mounted () {},
-  methods: {}
+  methods: {
+    test () {
+      this.$router.push('/login')
+    }
+  }
 }
 </script>
 

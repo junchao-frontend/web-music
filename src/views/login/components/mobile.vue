@@ -34,21 +34,26 @@ export default {
   data () {
     return {
       user: {
-        phone: '15533570808',
-        password: 'wangjunchao0919'
+        phone: '',
+        password: ''
       }
     }
   },
-  computed: {},
+  computed: {
+  },
   created () {},
   mounted () {},
   methods: {
     async toLogin (a) {
       const res = await mlogin(a)
-      console.log(res)
+      const userInfo = res.data.profile
+      console.log(userInfo)
       if (res.data.code === 200) {
         this.$toast.success('登录成功')
-        this.$router.push('/layout')
+        this.$store.commit('SET_COOKIE', res.data.cookie)
+        this.$store.commit('SET_TOKEN', res.data.token)
+        sessionStorage.setItem('id', userInfo.userId)
+        this.$router.push('/')
       } else {
         this.$toast.fail('账号或密码错误')
       }
