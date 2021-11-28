@@ -25,5 +25,12 @@ export default {
 }
 </script>
 
-<style scoped>
+<style lang="scss" scoped>
+.layout-container{
+  overflow: scroll;
+.van-tabbar{
+  //  z-index: 3000 !important;
+}
+}
+
 </style>

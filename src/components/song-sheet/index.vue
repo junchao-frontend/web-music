@@ -1,6 +1,7 @@
+// 歌单组件
 <template>
-  <div class="play-container">
-      <van-cell-group>
+  <div class="sheet-container">
+    <van-cell-group>
         <van-cell
         @click="openListMusic(item)"
         v-for="(item, index) in listItem"
@@ -9,7 +10,6 @@
          />
       </van-cell-group>
       <van-popup
-      :close="close"
       get-container="body"
       v-model="musicshow"
       closeable
@@ -17,14 +17,14 @@
       position="bottom"
       :class="musicshow ? 'test1' : 'test2'"
       >
-        <listMusic :musicdata="musicItem" />
+        <musicBox :musicdata="musicItem" />
       </van-popup>
   </div>
 </template>
 
 <script>
 import { getListitem } from '@/api/playList/'
-import listMusic from '../listMusic/index.vue'
+import musicBox from '@/components/music-box/'
 export default {
   props: {
     playList: {
@@ -33,7 +33,7 @@ export default {
     }
   },
   components: {
-    listMusic
+    musicBox
   },
   data () {
     return {
@@ -56,15 +56,12 @@ export default {
       }
       const { data } = await getListitem(params)
       this.listItem = data.playlist.tracks
-    //   console.log(data)
+      console.log(data, 'zj')
     },
     openListMusic (a) {
       console.log(a)
       this.musicshow = true
       this.musicItem = a
-    },
-    close () {
-
     }
   },
   watch: {
@@ -81,8 +78,8 @@ export default {
 }
 </script>
 
-<style scoped>
-.play-container{
+<style lang="scss" scoped>
+.sheet-container{
     padding-top: 40px;
 }
 .test1{
@@ -90,6 +87,9 @@ export default {
 }
 .test2{
   display: block !important;
-  height: 20% !important;
+  height: 15% !important;
+  /deep/ .van-popup__close-icon{
+      display: none;
+  }
 }
 </style>

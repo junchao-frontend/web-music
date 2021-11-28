@@ -16,7 +16,7 @@
           <van-button
           @click="eLogin"
           type="default"
-          round>邮箱登录</van-button>
+          round>账号密码登录</van-button>
         </div>
       </div>
       <van-popup
@@ -37,18 +37,18 @@
       v-model="emailShow"
       position="left"
       :style="{width: '100%',height:' 100%'}">
-      <email />
+      <passWord />
       </van-popup>
   </div>
 </template>
 
 <script>
 import mobile from './components/mobile.vue'
-import email from './components/email.vue'
+import passWord from './components/password.vue'
 export default {
   components: {
     mobile,
-    email
+    passWord
   },
   data () {
     return {
