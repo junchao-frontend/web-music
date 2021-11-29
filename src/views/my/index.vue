@@ -42,7 +42,7 @@
       </div>
         <van-cell
         class="love-list"
-        @click="openPlaylist(item)"
+        @click="openLovelist()"
         :icon="loveList.coverImgUrl"
         :title="loveList.name"
         :value="loveList.trackCount +'首'" />
@@ -59,10 +59,12 @@
       </van-cell-group>
         </div>
       <van-popup
-      get-container="body"
-      v-model="palylistshow"
+      @click-close-icon="closeSheet()"
       closeable
       close-icon-position="top-left"
+      class="close-sheet"
+      get-container="body"
+      v-model="palylistshow"
       position="right"
       :style="{width: '100%',height:' 100%'}">
         <playList :playList="listItem" />
@@ -100,24 +102,38 @@ export default {
       var params = {
         uid: sessionStorage.getItem('id')
       }
+      // 获取用户信息
       getUser(params).then(res => {
         const userInfo = res.data.profile
         this.$store.commit('SET_NAME', userInfo.nickname)
         this.$store.commit('SET_AVATAR', userInfo.avatarUrl)
       })
+      // 获取所有歌单
       getSongSheet(params).then(res => {
         list = res.data.playlist
         this.loveList = list[0]
         this.otherlist = list.filter((item, index) => {
           return index > 0
         })
-        console.log(this.otherlist, '111')
       })
     },
+    // 打开每一歌单
     openPlaylist (a) {
       // console.log(a)
+      this.$store.state.islayoutShow = false
       this.listItem = a
       this.palylistshow = true
+    },
+    // 打开我的喜欢
+    openLovelist () {
+      this.palylistshow = true
+      this.$store.state.islayoutShow = false
+      this.listItem = this.loveList
+    },
+    // 关闭歌单弹窗
+    closeSheet () {
+      this.$store.state.islayoutShow = true
+      this.$store.commit('hidetest')
     }
   }
 }
@@ -126,7 +142,17 @@ export default {
 <style lang="scss" scoped>
 
 .my-container{
+  position: relative;
   .header{
+    .van-cell__title{
+      font-size: 15px;
+      font-weight: bold;
+      margin-left: 15px;
+      margin-top: 10px;
+    }
+    // display: flex;
+    // justify-content: center;
+    // align-items: center;
     margin-top: 15px;
     border-radius: 10px;
   }

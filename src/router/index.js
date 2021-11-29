@@ -42,5 +42,27 @@ const router = new VueRouter({
   base: process.env.BASE_URL,
   routes
 })
-
+// 路由守卫
+router.beforeEach((to, from, next) => {
+  // console.log(to)
+  // to 是 访问界面
+  // from 是来自哪
+  // next是放行方法
+  const logintoken = sessionStorage.getItem('cookie') // 从sessionstorage拿到token
+  if (logintoken && to.path === '/login') {
+    next('/')
+  }
+  // console.log(logintoken)
+  // 如果去登录界面 直接放行
+  // 先判断有没有token 如果已经获取到了token还想去登录界面则回到主界面
+  if (to.path === '/login') { // 如果是去登录界面直接放行
+    next()
+  } else {
+    if (!logintoken) { // 如果没有token 则要去登录界面
+      next('/login') // 如果这里路径写 /login  则不需要上面根路径的重定向
+    } else {
+      next()
+    }
+  }
+})
 export default router
