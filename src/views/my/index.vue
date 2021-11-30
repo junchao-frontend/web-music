@@ -7,11 +7,11 @@
             fit="cover"
             width="70"
             height="70"
-            :src="GET_AVATAR"
+            :src="userAvatar"
           />
         </div>
         <div slot="title">
-          {{GET_NAME}}
+          {{userName}}
         </div>
       </van-cell>
       <div class="my-icon">
@@ -89,15 +89,18 @@ export default {
     }
   },
   computed: {
-    ...mapGetters(['GET_NAME', 'GET_AVATAR'])
+    ...mapGetters({
+      userName: 'userModule/GET_NAME',
+      userAvatar: 'userModule/GET_AVATAR'
+    })
   },
   created () {
-    this.test()
   },
   mounted () {
+    this.initData()
   },
   methods: {
-    test () {
+    initData () {
       var list = []
       var params = {
         uid: sessionStorage.getItem('id')
@@ -105,8 +108,8 @@ export default {
       // 获取用户信息
       getUser(params).then(res => {
         const userInfo = res.data.profile
-        this.$store.commit('SET_NAME', userInfo.nickname)
-        this.$store.commit('SET_AVATAR', userInfo.avatarUrl)
+        this.$store.commit('userModule/SET_NAME', userInfo.nickname)
+        this.$store.commit('userModule/SET_AVATAR', userInfo.avatarUrl)
       })
       // 获取所有歌单
       getSongSheet(params).then(res => {
@@ -120,12 +123,13 @@ export default {
     // 打开每一歌单
     openPlaylist (a) {
       // console.log(a)
-      this.$store.state.islayoutShow = false
+      this.$store.commit('statusModule/hideLayout')
       this.listItem = a
       this.palylistshow = true
     },
     // 打开我的喜欢
     openLovelist () {
+      this.$store.commit('statusModule/hideLayout')
       this.palylistshow = true
       this.$store.state.islayoutShow = false
       this.listItem = this.loveList
@@ -133,7 +137,7 @@ export default {
     // 关闭歌单弹窗
     closeSheet () {
       this.$store.state.islayoutShow = true
-      this.$store.commit('hidetest')
+      this.$store.commit('statusModule/showLayout')
     }
   }
 }
@@ -158,7 +162,7 @@ export default {
   }
   padding-left: 8px;
   padding-right: 8px;
-  padding-bottom: 55px;
+  padding-bottom: 90px;
   overflow-y: auto;
 .list-group{
   /deep/ .van-cell-group{

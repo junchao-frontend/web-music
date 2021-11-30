@@ -25,7 +25,7 @@
     </div>
     <van-cell-group>
         <van-cell
-        @click="openListMusic(item)"
+        @click="openListMusic(index)"
         v-for="(item, index) in listItem"
         :key="index"
         :label="item.ar[0].name + '-'+ item.al.name"
@@ -81,7 +81,7 @@ export default {
   },
   methods: {
     async showList () {
-      this.$store.commit('showLoading')
+      this.$store.commit('statusModule/showLoading')
       var listid = this.playList.id
       var params = {
         id: listid,
@@ -89,19 +89,23 @@ export default {
       }
       const { data } = await getListitem(params)
       this.listItem = data.playlist.tracks
-      console.log(this.listItem, 'wdad')
-      this.$store.commit('hideLoading')
+      const songsId = []
+      this.listItem.forEach(item => {
+        // console.log(item)
+        songsId.push(item)
+      })
+      // console.log(songsId)
+      this.$store.commit('musicModule/setSongs', songsId)
+      // console.log(this.listItem, '11111')
+      this.$store.commit('statusModule/hideLoading')
     },
     // 进入听歌界面
-    openListMusic (a) {
-      this.$store.commit('handlemusicItem', a)
-      this.$store.commit('handlemusicBoxShow')
-      this.$store.commit('handlemusicshow')
+    openListMusic (index) {
+      // console.log(11)
+      // this.$store.commit('musicModule/setmusicItem', item)
+      this.$store.commit('musicModule/setSongindex', index)
+      this.$store.commit('statusModule/handlemusic')
       // this.musicItem = a
-    },
-    // 关闭听歌界面
-    closeMusic () {
-      this.musicshow = false
     }
   },
   watch: {
@@ -126,7 +130,7 @@ export default {
 </style>
 <style lang="scss" scoped>
 .sheet-container{
-    // padding-top: 30px;
+    padding-bottom: 90px;
     .sheetImg{
       /deep/ .van-image__img{
       border-radius: 7px;}

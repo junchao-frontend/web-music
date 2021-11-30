@@ -65,8 +65,8 @@ export default {
       console.log(userInfo)
       if (res.data.code === 200) {
         this.$toast.success('登录成功')
-        this.$store.commit('SET_COOKIE', res.data.cookie)
-        this.$store.commit('SET_TOKEN', res.data.token)
+        this.$store.commit('userModule/SET_COOKIE', res.data.cookie)
+        // this.$store.commit('SET_TOKEN', res.data.token)
         sessionStorage.setItem('id', userInfo.userId)
         sessionStorage.setItem('cookie', res.data.cookie)
         this.$router.push('/')

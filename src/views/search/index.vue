@@ -27,9 +27,11 @@ export default {
   methods: {
     // 展示发现页轮播图
     async showData () {
+      this.$store.commit('statusModule/showLoading')
       const res = await getSearch()
       this.banner = res.data.data.blocks[0].extInfo.banners
-      console.log(this.banner)
+      this.$store.commit('statusModule/hideLoading')
+      // console.log(this.banner)
     }
   }
 }

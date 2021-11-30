@@ -4,18 +4,25 @@
     <div><slot></slot></div>
     <div class="wrap" :class="musicshow? '': 'wrap-coll'">
       <div class="header" :class="musicshow? '': 'header-coll'">
-        <div class="music-title">{{musicItem.name}}</div>
-        <div class="music-creat">{{musicItem.ar[0].name}}</div>
+        <div class="music-title">{{musicName}}</div>
+        <div class="music-creat">{{musicCreator}}</div>
       </div>
       <div class="music-logo" :class="musicshow? '': 'music-logo-coll'">
         <div @click="enlargeBox()" class="image-wrap" :class="musicshow? '': 'image-wrap-coll'" >
           <van-image
+          :style="playStatus? '' : {animation: 'unset'}"
           class="vanImge"
           :class="musicshow? '': 'vanImge-coll'"
           round
-          :src="musicItem.al.picUrl"
+          :src="musicBgi "
           />
         </div>
+      </div>
+      <div class="changji" :class="musicshow? '': 'changji-coll'">
+        <img
+        class="changji-img"
+        :class="playStatus ? 'changji-run' : ''"
+        src="./changzhen.png">
       </div>
       <div v-show="musicshow" class="audio" :class="musicshow? 'audio-coll': ''" >
         <!-- <van-progress inactive :percentage="50" /> -->
@@ -23,41 +30,37 @@
           <div class="love-music">
           <!-- <van-icon name="like-o" /> -->
           </div>
-          <div class="front-music">
+          <div @click="FrontMusic()" class="front-music">
             <i class="iconfont icon-shangyiqu"></i>
           </div>
           <div  @click="playMusic()" class="play-suspend">
             <i :class="playStatus ? 'iconfont icon-zanting' : 'iconfont icon-bofang' "></i>
           </div>
-          <div class="next-music">
+          <div @click="nextMusic()" class="next-music">
             <i class="iconfont icon-xiayiqu"></i>
           </div>
        </div>
-       <audio :src="musicUrl" ref="audio">
+       <audio :src="musicUrl" :autoplay="true" :loop="true" ref="audio">
         Your browser does not support the audio element.
       </audio>
       </div>
       <div class="music-operation" :class="musicshow ?'music-operation-coll': '' ">
-        <div class="music-operation-name">{{musicItem.name}}-</div>
-        <div class="music-operation-creat">{{musicItem.ar[0].name}}</div>
+        <div class="music-operation-name">{{musicName }}-</div>
+        <div class="music-operation-creat">{{musicCreator}}</div>
         <div @click="playMusic()" class="music-operation-icon">
           <i :class="playStatus ? 'iconfont icon-zanting' : 'iconfont icon-bofang' "></i>
           </div>
       </div>
     </div>
-      <div class="overlay" :class="musicshow ? '' : 'closemusic'" :style="test"></div>
+      <div class="overlay" :class="musicshow ? '' : 'closemusic'" :style="test "></div>
   </div>
 </template>
 
 <script>
-import { mapState } from 'vuex'
+import { mapGetters, mapState } from 'vuex'
 import { getMusicUrl } from '@/api/music.js'
 export default {
   props: {
-    musicdata: {
-      type: Object,
-      require: true
-    },
     musicshow: {
       type: Boolean,
       require: true
@@ -68,40 +71,54 @@ export default {
     return {
       musicUrl: '',
       openMusic: true,
+      musicData: '', // 音乐数据
+      playStatus: true, // 播放状态
       musicName: '',
-      musicCreator: '', // 歌曲作者
-      musicImg: '', // 歌曲背景图
-      playStatus: false // 播放状态
+      musicCreator: '',
+      musicBgi: ''
+      // currentId: '' // 当前歌曲index
     }
   },
   computed: {
-    ...mapState(['musicItem']),
     test () {
-      return ' backgroundImage: url(' + this.musicItem.al.picUrl + ') '
-    }
+      return ' backgroundImage: url(' + this.musicBgi + ') '
+    },
+    ...mapState(
+      {
+        musicItem: state => state.musicModule.musicItem,
+        songIndex: state => state.musicModule.songIndex,
+        songsArr: state => state.musicModule.songsArr
+      }
+    ),
+    ...mapGetters({
+      getSongindex: 'musicModule/getSongindex'
+    })
   },
   created () {},
   mounted () {
-    this.getSongUrl()
-    // console.log(this.musicItem, '-6456')
+    this.initMusicData(this.getSongindex)
+    this.getSongUrl(this.getSongindex)
   },
   methods: {
-    enlargeBox () {
-      this.$store.commit('handlemusicshow')
-      // console.log('wjc')
+    initMusicData (currentIndex) {
+      // console.log(currentIndex, 'ys')
+      // this.currentId = this.songIndex // 用currentId 接受 当前歌曲index
+      this.playStatus = true
+      this.musicData = this.songsArr[currentIndex] // 用musicData接受vuex中相对于缩印的数据
+      this.musicName = this.musicData.name
+      this.musicCreator = this.musicData.ar[0].name
+      this.musicBgi = this.musicData.al.picUrl
     },
-    async getSongUrl () {
-      // console.log(this.musicdata)
-      if (!this.musicdata) return
-      this.musicImg = ''
-      this.musicCreator = ''
-      this.musicName = ''
-      var songid = this.musicItem.id || ''
+    enlargeBox () {
+      this.$store.commit('statusModule/handlemusicshow')
+    },
+    async getSongUrl (currentIndex) {
+      var songid = this.songsArr[currentIndex].id
+      // console.log(songid, 'songid')
       var params = {
         id: songid
       }
       const { data } = await getMusicUrl(params)
-      // console.log(data, '------')
       this.musicUrl = data.data[0].url
     },
     downBox () {
@@ -116,25 +133,64 @@ export default {
         this.playStatus = true
         this.$refs.audio.play()
       }
+    },
+    // 上一曲
+    FrontMusic () {
+      if (this.getSongindex === 0) {
+        this.$toast.success('登录成功')
+      } else {
+        var musicId = this.songsArr[this.getSongindex - 1].id
+        var params = {
+          id: musicId
+        }
+        getMusicUrl(params).then(res => {
+        // console.log(res, 'res')
+          this.musicUrl = res.data.data[0].url
+          this.musicBgi = this.songsArr[this.getSongindex - 1].al.picUrl
+          this.musicName = this.songsArr[this.getSongindex - 1].name
+          this.musicCreator = this.songsArr[this.getSongindex - 1].ar[0].name
+          this.$store.state.musicModule.songIndex -= 1
+        })
+      }
+    },
+    // 下一曲
+    nextMusic () {
+      var musicId = this.songsArr[this.getSongindex + 1].id
+      var params = {
+        id: musicId
+      }
+      getMusicUrl(params).then(res => {
+        // console.log(res, 'res')
+        this.musicUrl = res.data.data[0].url
+        this.musicBgi = this.songsArr[this.getSongindex + 1].al.picUrl
+        this.musicName = this.songsArr[this.getSongindex + 1].name
+        this.musicCreator = this.songsArr[this.getSongindex + 1].ar[0].name
+        this.$store.state.musicModule.songIndex += 1
+      })
     }
   },
   watch: {
-    musicdata: {
-      handler (newvalue, oldvalue) {
-        this.musicdata = newvalue
-        this.musicName = newvalue.name
-        this.getSongUrl()
+    // musicItem (newvalue) {
+    //   // console.log(newvalue)
+    //   this.musicData = newvalue
+    //   this.getSongUrl()
+    //   this.musicName = this.musicData.name
+    //   this.musicCreator = this.musicData.ar[0].name
+    //   this.musicBgi = this.musicData.al.picUrl
+    //   this.playStatus = true
+    // }
+    // 监听歌曲的index
+    getSongindex: {
+      handler () {
+        console.log(this.getSongindex)
+        this.initMusicData(this.getSongindex)
+        this.getSongUrl(this.getSongindex)
       },
-      deep: true,
-      immediate: false
-    },
-    musicshow: {
-      handler (newvalue, oldvalue) {
-        this.musicshow = newvalue
-      },
-      deep: true,
-      immediate: false
+      immediate: true
     }
+    // getSongindex () {
+    //   console.log(this.getSongindex)
+    // }
   }
 }
 </script>
@@ -143,6 +199,14 @@ export default {
 @mixin transitions {
 
   transition:  all 0.5s ease;
+}
+@keyframes change {
+  0%{
+    transform: rotate(0deg); // 初始状态
+  }
+  100%{
+    transform: rotate(360deg);
+  }
 }
 .music-container{
   height: 100vh;
@@ -158,6 +222,43 @@ export default {
     margin-top:30px;
     &-coll{
       display: none;
+    }
+  }
+  .changji{
+    position: fixed;
+    top: 15%;
+    left: 50%;
+    margin-left: -25px;
+    // border: 1px solid red;
+    // background: url('./changzhen.png');
+    // width: 50px;
+    // height: 50px;
+    // background-color: rgb(255, 255, 255);
+    opacity: 1;
+    transition: width 0s  ease 0.5s;
+    transition: opacity 0s ease 0.5s;
+
+    &-img{
+      width: 150px;
+      height: 150px;
+      transition: transform 0.5s ease;
+      -webkit-transform-origin:18px 18px;
+    }
+    &-run{
+      // transform-origin:0px,0px ;
+      // transform-origin:18px,18px ;
+      // -moz-transform-origin: 18px 18px;
+      // -o-transform-origin:18px 18px;
+      transform:rotate(20deg);
+      -ms-transform:rotate(20deg); /* IE 9 */
+      -moz-transform:rotate(20deg); /* Firefox */
+      -webkit-transform:rotate(20deg); /* Safari 和 Chrome */
+      -o-transform:rotate(20deg); /* Opera */
+    }
+    &-coll{
+      height: 0;
+      opacity: 0;
+      transition: opacity 0s ease;
     }
   }
   .music-operation{
@@ -197,7 +298,7 @@ export default {
     }
   }
   .music-logo{
-    margin-top: 100px;
+    margin-top: 90px;
     transition: all 0.5s ease-in;
     float: left;
     display: flex;
@@ -212,8 +313,8 @@ export default {
       background-image: url('./music.png');
       background-repeat: no-repeat;
       background-size: 100% 100%;
-      width: 300px;
-      height: 300px;
+      width: 290px;
+      height: 290px;
       display: flex;
       align-items: center;
       justify-content: center;
@@ -231,6 +332,7 @@ export default {
       // height: 100%;
     }
     .vanImge{
+      animation: change 8.2s linear infinite;
       transition: all 0.6s ease-out;
       width: 155px;
       height: 155px;
@@ -256,7 +358,7 @@ export default {
   }
   .audio{
     margin: 0 auto;
-    margin-top: 70px;
+    margin-top: 40px;
     float: left;
     width: 100%;
     z-index: 9999 !important;
@@ -317,6 +419,12 @@ export default {
   }
   .closemusic{
     opacity: 0;
+  }
+  /deep/ .van-toast{
+    z-index: 9999 !important;
+  }
+  /deep/ .van-toast .van-toast--middle .van-toast--success{
+    z-index: 9999 !important;
   }
 }
 </style>
