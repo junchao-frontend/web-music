@@ -4,7 +4,8 @@ const musicModule = {
   state: {
     musicItem: '', // 每条音乐的数据
     songsArr: [], // 每个歌单所有歌曲的ID
-    songIndex: '' // 每个歌曲的index
+    songIndex: '', // 每个歌曲的index
+    isShowlyrics: true // 是否不展示歌词
   },
   mutations: {
     // 存入一条音乐的数据
@@ -17,10 +18,17 @@ const musicModule = {
     },
     setSongindex (state, songIndex) {
       state.songIndex = songIndex
+    },
+    Showlyrics (state) {
+      state.isShowlyrics = false
+    },
+    notShowlyrics (state) {
+      state.isShowlyrics = true
     }
   },
   getters: {
-    getSongindex: (state) => state.songIndex
+    getSongindex: (state) => state.songIndex,
+    getisShowlyrics: (state) => state.isShowlyrics
   }
 }
 

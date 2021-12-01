@@ -16,7 +16,8 @@
       <div>不能用手机自带的划屏切换窗口 这样就会导致下面的导航栏消失</div>
       <br>
       <div>待完成功能：</div>
-      <div>实现点击唱片后出现滚动歌词</div>
+      <div>实现点击唱片后出现滚动歌词(已完成)</div>
+      <div>实现进度条拖拽</div>
   </div>
 </template>
 
@@ -29,7 +30,9 @@ export default {
   },
   computed: {},
   created () {},
-  mounted () {},
+  mounted () {
+    console.log(this.$store.state.musicModule.songIndex)
+  },
   methods: {}
 }
 </script>

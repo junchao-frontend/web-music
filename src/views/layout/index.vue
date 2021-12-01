@@ -31,12 +31,15 @@ export default {
     }
   },
   computed: {
-    ...mapGetters({ LAYOUTSHOW: 'statusModule/GET_LAYOUTSHOW' }),
+    ...mapGetters(
+      { LAYOUTSHOW: 'statusModule/GET_LAYOUTSHOW' },
+      { getisShowlyrics: 'musicModule/getisShowlyrics' }),
     ...mapState(
       {
         LOADING: state => state.statusModule.LOADING,
         musicBoxShow: state => state.statusModule.musicBoxShow,
-        musicshow: state => state.statusModule.musicshow
+        musicshow: state => state.statusModule.musicshow,
+        isShowlyrics: state => state.musicModule.isShowlyrics
       }
     ),
     handleHeight () {
@@ -57,6 +60,10 @@ export default {
   methods: {
     closeMusic () {
       this.$store.commit('statusModule/hidemusicshow')
+      // console.log(this.isShowlyrics)
+      if (this.isShowlyrics === false) {
+        this.$store.commit('musicModule/notShowlyrics')
+      }
     }
   }
 }
@@ -66,6 +73,7 @@ export default {
 .layout-container{
   overflow: scroll;
 .van-tabbar{
+   height: 40px;
    z-index: 6000 !important;
    transition: transform .3s ease-in;
    overflow: hidden;
@@ -89,6 +97,6 @@ export default {
   left: 0;
   right: 0;
   overflow: hidden;
-  height: 90px !important;
+  height: 78px !important;
 }
 </style>
