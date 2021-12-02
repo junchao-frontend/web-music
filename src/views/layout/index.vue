@@ -73,7 +73,7 @@ export default {
 .layout-container{
   overflow: scroll;
 .van-tabbar{
-   height: 40px;
+   height: 45px;
    z-index: 6000 !important;
    transition: transform .3s ease-in;
    overflow: hidden;
@@ -89,6 +89,7 @@ export default {
   height: 100% !important;
 }
 .van-icon-arrow-down{
+  font-size: 25px;
   color: white;
 }
 .test2{
@@ -97,6 +98,6 @@ export default {
   left: 0;
   right: 0;
   overflow: hidden;
-  height: 78px !important;
+  height: 80px !important;
 }
 </style>

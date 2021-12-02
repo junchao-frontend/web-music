@@ -5,22 +5,14 @@
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Document</title>
-    <style>
-        .zj{
-            width: 300px;
-            height: 300px;
-            /* background-color: #85FFBD; */
-            -webkit-background-clip: icon;
-            -webkit-text-fill-color:transparent;
-            background-color: #00ff4a;
-background-image: linear-gradient(150deg, #00ff4a 0%, #00ffe6 24%, #e9ff00 49%, #fc00ff 75%, #ff2600 100%);
-
-
-
-        }
-    </style>
 </head>
 <body>
-    <div class="zj">1111</div>
+    <div>asdasd&nbsp;11</div>
+    <script>
+        var a = 'asdasd&nbsp;11'
+        // console.log(a);
+        a.replace(/&nbsp;/ig, 'a')
+        console.log(a);
+    </script>
 </body>
 </html>

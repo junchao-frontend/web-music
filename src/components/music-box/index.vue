@@ -26,7 +26,7 @@
       </div>
       <div v-show="musicshow" class="audio" :class="musicshow? 'audio-coll': ''" >
         <!-- <van-progress inactive :percentage="50" /> -->
-        <div class="audio-slider">
+        <div v-show="getisShowlyrics" class="audio-slider">
           <van-slider @change="testtest" :min="0" :max="maxMusic" v-model="value" active-color="#ee0a24">
             <template #button>
               <div class="custom-button">{{ value }}</div>
@@ -91,7 +91,7 @@ export default {
   data () {
     return {
       musicUrl: '',
-      value: '',
+      value: 0,
       openMusic: true,
       musicData: '', // 音乐数据
       playStatus: true, // 播放状态
@@ -128,7 +128,7 @@ export default {
   },
   methods: {
     testtest (e) {
-      console.log(e)
+      // console.log(e)
       this.$refs.audio.currentTime = e
     },
     initMusicData (currentIndex) {
@@ -219,7 +219,7 @@ export default {
       if (this.playStatus) {
         this.playStatus = false
         this.$refs.audio.pause()
-        console.log(this.$refs.audio)
+        // console.log(this.$refs.audio)
       } else {
         this.playStatus = true
         this.$refs.audio.play()

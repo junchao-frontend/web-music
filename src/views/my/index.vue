@@ -114,6 +114,7 @@ export default {
       // 获取所有歌单
       getSongSheet(params).then(res => {
         list = res.data.playlist
+        console.log(list)
         this.loveList = list[0]
         this.otherlist = list.filter((item, index) => {
           return index > 0

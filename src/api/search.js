@@ -4,7 +4,14 @@ export const getSearch = params => {
   return request({
     method: 'GET',
     url: '/homepage/block/page',
-    // data用来设置POST请求体
+    params
+  })
+}
+// 获取 APP 首页圆形图标入口列表
+export const getHomeball = params => {
+  return request({
+    method: 'GET',
+    url: '/homepage/dragon/ball',
     params
   })
 }
