@@ -1,6 +1,6 @@
 <template>
   <div class="container">
-    11
+    111
   </div>
 </template>
 
@@ -20,6 +20,7 @@ export default {
 
 <style scoped>
 .text{
-  margin-top: 30px;
+  position: fixed;
+  top: 10px;
 }
 </style>
