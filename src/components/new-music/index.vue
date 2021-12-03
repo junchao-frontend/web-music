@@ -1,4 +1,4 @@
-// 歌单听歌组件
+// 新歌速递组件
 <template>
   <div class='music-container' :style="musicshow? {backgroundColor:'white'} : {backgroundColor:'rgba(255, 255, 255,.8)'}">
     <div><slot></slot></div>
@@ -112,19 +112,19 @@ export default {
     ...mapState(
       {
         musicItem: state => state.musicModule.musicItem,
-        songIndex: state => state.musicModule.songIndex,
-        songsArr: state => state.musicModule.songsArr
+        newsongIndex: state => state.musicModule.newsongIndex,
+        newsongsArr: state => state.musicModule.newsongsArr
       }
     ),
     ...mapGetters({
-      getSongindex: 'musicModule/getSongindex',
+      getnewSongindex: 'musicModule/getnewSongindex',
       getisShowlyrics: 'musicModule/getisShowlyrics'
     })
   },
   created () {},
   mounted () {
-    this.initMusicData(this.getSongindex)
-    this.getSongUrl(this.getSongindex)
+    this.initMusicData(this.getnewSongindex)
+    this.getSongUrl(this.getnewSongindex)
   },
   methods: {
     testtest (e) {
@@ -132,17 +132,16 @@ export default {
       this.$refs.audio.currentTime = e
     },
     initMusicData (currentIndex) {
-      // console.log(currentIndex, 'ys')
-      // this.currentId = this.songIndex // 用currentId 接受 当前歌曲index
+      // this.currentId = this.newsongIndex // 用currentId 接受 当前歌曲index
       this.playStatus = true
-      this.musicData = this.songsArr[currentIndex] // 用musicData接受vuex中相对于索引的数据
+      this.musicData = this.newsongsArr[currentIndex] // 用musicData接受vuex中相对于索引的数据
       this.musicName = this.musicData.name
-      this.musicCreator = this.musicData.ar[0].name
-      this.musicBgi = this.musicData.al.picUrl
+      this.musicCreator = this.musicData.album.artists[0].name
+      this.musicBgi = this.musicData.album.picUrl
     },
     enlargeBox () {
       if (this.musicshow === false) {
-        this.$store.commit('statusModule/handlemusicshow')
+        this.$store.commit('statusModule/handlenewmusicshow')
       } else if (this.musicshow === true) {
         this.showlyrics()
       }
@@ -159,7 +158,7 @@ export default {
       // this.isShowlyrics = !this.isShowlyrics
     },
     async getSongUrl (currentIndex) {
-      var songid = this.songsArr[currentIndex].id
+      var songid = this.newsongsArr[currentIndex].id
       // console.log(songid, 'songid')
       var params = {
         id: songid
@@ -227,46 +226,49 @@ export default {
     },
     // 上一曲
     FrontMusic () {
-      if (this.getSongindex === 0) {
+      if (this.getnewSongindex === 0) {
         this.$toast.success('登录成功')
       } else {
-        var musicId = this.songsArr[this.getSongindex - 1].id
+        var musicId = this.newsongsArr[this.getnewSongindex - 1].id
         var params = {
           id: musicId
         }
         getMusicUrl(params).then(res => {
         // console.log(res, 'res')
           this.musicUrl = res.data.data[0].url
-          this.musicBgi = this.songsArr[this.getSongindex - 1].al.picUrl
-          this.musicName = this.songsArr[this.getSongindex - 1].name
-          this.musicCreator = this.songsArr[this.getSongindex - 1].ar[0].name
-          this.$store.state.musicModule.songIndex -= 1
+          this.musicBgi = this.newsongsArr[this.getnewSongindex - 1].album.picUrl
+          this.musicName = this.newsongsArr[this.getnewSongindex - 1].name
+          this.musicCreator = this.newsongsArr[this.getnewSongindex - 1].album.artists[0].name
+          this.$store.state.musicModule.newsongIndex -= 1
         })
       }
     },
     // 下一曲
     nextMusic () {
-      var musicId = this.songsArr[this.getSongindex + 1].id
+      var musicId = this.newsongsArr[this.getnewSongindex + 1].id
       var params = {
         id: musicId
       }
       getMusicUrl(params).then(res => {
         // console.log(res, 'res')
         this.musicUrl = res.data.data[0].url
-        this.musicBgi = this.songsArr[this.getSongindex + 1].al.picUrl
-        this.musicName = this.songsArr[this.getSongindex + 1].name
-        this.musicCreator = this.songsArr[this.getSongindex + 1].ar[0].name
-        this.$store.state.musicModule.songIndex += 1
+        this.musicBgi = this.newsongsArr[this.getnewSongindex + 1].album.picUrl
+        this.musicName = this.newsongsArr[this.getnewSongindex + 1].name
+        this.musicCreator = this.newsongsArr[this.getnewSongindex + 1].album.artists[0].name
+        this.$store.state.musicModule.newsongIndex += 1
+      //   this.musicName = this.musicData.name
+      // this.musicCreator = this.musicData.album.artists[0].name
+      // this.musicBgi = this.musicData.album.picUrl
       })
     }
   },
   watch: {
     // 监听歌曲的index
-    getSongindex: {
+    getnewSongindex: {
       handler () {
-        // console.log(this.getSongindex)
-        this.initMusicData(this.getSongindex)
-        this.getSongUrl(this.getSongindex)
+        // console.log(this.getnewSongindex)
+        this.initMusicData(this.getnewSongindex)
+        this.getSongUrl(this.getnewSongindex)
       }
     }
   }

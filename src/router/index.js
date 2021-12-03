@@ -15,13 +15,13 @@ const routes = [
     children: [
       {
         path: '',
-        name: 'search',
-        component: () => import('../views/search/')
+        name: 'home',
+        component: () => import('../views/home/')
       },
       {
-        path: '/podcast',
-        name: 'podcast',
-        component: () => import('../views/podcast/')
+        path: '/search',
+        name: 'search',
+        component: () => import('../views/search/')
       },
       {
         path: '/my',

@@ -18,6 +18,9 @@
           type="default"
           round>账号密码登录</van-button>
         </div>
+        <div class="zhushi">
+          注:此项目纯属个人用来学习,正常使用请选择网易云音乐官方客户端
+        </div>
       </div>
       <van-popup
       get-container="body"
@@ -115,6 +118,14 @@ export default {
         background-color: #fff;
       }
     }
+  }
+  .zhushi{
+    left: 28%;
+    width: 170px;
+    font-size: 10px;
+    bottom: 20px;
+    position: fixed;
+    color: rgba(255,255,255,.7);
   }
 }
 </style>

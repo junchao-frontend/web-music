@@ -8,21 +8,30 @@
       :musicshow="musicshow" >
       <van-icon class="btn" name="arrow-down" v-if="musicshow" @click="closeMusic()" />
     </musicBox>
+    <newMusic
+      v-if="newmusicBoxShow"
+      :class="newmusicshow? '' : 'test2'"
+      class="musci-box"
+      :musicshow="newmusicshow" >
+      <van-icon class="btn" name="arrow-down" v-if="newmusicshow" @click="closenewMusic()" />
+    </newMusic>
     <van-tabbar :style="handleHeight" v-model="active" route>
-    <van-tabbar-item icon="search" to='/'>发现</van-tabbar-item>
-    <van-tabbar-item icon="setting-o" to='/podcast'>简介</van-tabbar-item>
+    <van-tabbar-item icon="wap-home-o" to='/'>发现</van-tabbar-item>
+    <van-tabbar-item icon="search" to='/search'>搜索</van-tabbar-item>
     <van-tabbar-item icon="music-o" to='/my'>我的</van-tabbar-item>
-    <van-tabbar-item icon="friends-o" to='/follow'>关注</van-tabbar-item>
+    <van-tabbar-item icon="setting-o" to='/follow'>简介</van-tabbar-item>
     </van-tabbar>
   </div>
 </template>
 
 <script>
 import musicBox from '../../components/music-box/'
+import newMusic from '../../components/new-music/'
 import { mapGetters, mapState } from 'vuex'
 export default {
   components: {
-    musicBox
+    musicBox,
+    newMusic
   },
   data () {
     return {
@@ -38,7 +47,9 @@ export default {
       {
         LOADING: state => state.statusModule.LOADING,
         musicBoxShow: state => state.statusModule.musicBoxShow,
+        newmusicBoxShow: state => state.statusModule.newmusicBoxShow,
         musicshow: state => state.statusModule.musicshow,
+        newmusicshow: state => state.statusModule.newmusicshow,
         isShowlyrics: state => state.musicModule.isShowlyrics
       }
     ),
@@ -64,6 +75,13 @@ export default {
       if (this.isShowlyrics === false) {
         this.$store.commit('musicModule/notShowlyrics')
       }
+    },
+    closenewMusic () {
+      this.$store.commit('statusModule/hidenewmusicshow')
+      // console.log(this.isShowlyrics)
+      if (this.isShowlyrics === false) {
+        this.$store.commit('musicModule/notShowlyrics')
+      }
     }
   }
 }
@@ -71,6 +89,7 @@ export default {
 
 <style lang="scss" scoped>
 .layout-container{
+  height: 100%;
   overflow: scroll;
 .van-tabbar{
    height: 45px;
@@ -98,6 +117,6 @@ export default {
   left: 0;
   right: 0;
   overflow: hidden;
-  height: 80px !important;
+  height: 85px !important;
 }
 </style>

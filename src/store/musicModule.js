@@ -4,7 +4,9 @@ const musicModule = {
   state: {
     musicItem: '', // 每条音乐的数据
     songsArr: [], // 每个歌单所有歌曲的ID
+    newsongsArr: [], // 新歌速递所有歌曲的ID
     songIndex: '', // 每个歌曲的index
+    newsongIndex: '', // 新歌速递的index
     isShowlyrics: true // 是否不展示歌词
   },
   mutations: {
@@ -16,8 +18,15 @@ const musicModule = {
     setSongs (state, songsArr) {
       state.songsArr = songsArr
     },
+    // 存入新歌速递所有歌曲id
+    setnewSongs (state, songsArr) {
+      state.newsongsArr = songsArr
+    },
     setSongindex (state, songIndex) {
       state.songIndex = songIndex
+    },
+    setnewSongindex (state, newsongIndex) {
+      state.newsongIndex = newsongIndex
     },
     Showlyrics (state) {
       state.isShowlyrics = false
@@ -28,6 +37,7 @@ const musicModule = {
   },
   getters: {
     getSongindex: (state) => state.songIndex,
+    getnewSongindex: (state) => state.newsongIndex,
     getisShowlyrics: (state) => state.isShowlyrics
   }
 }

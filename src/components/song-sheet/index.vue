@@ -154,6 +154,7 @@ export default {
       // this.$store.commit('musicModule/setmusicItem', item)
       this.$store.commit('musicModule/setSongindex', index)
       this.$store.commit('statusModule/handlemusic')
+      this.$store.commit('statusModule/hidenewmusic')
       // this.musicItem = a
     },
     // 收藏歌单
